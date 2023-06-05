@@ -44,6 +44,9 @@ def model_predict(img_path, model):
     return classes
  # Route for the POST request
 
+@app.errorhandler(500)
+def internal_server_error(e):
+    return jsonify({'Error': 'Internal Server Error'}), 500
 
 @app.route('/', methods=['POST'])
 def upload():
@@ -61,7 +64,7 @@ def upload():
     else:
         try:
             response = requests.get(url)
-            if response.status_code == 404:
+            if response.status_code == 404 :
               return jsonify({'Error': 'The URL is not valid or could not be found'})
             else:
                 image_url = tf.keras.utils.get_file('Court', origin=url)
